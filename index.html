@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Cadastro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Empréstimo Consignado Inss</h2>
+        <form id="cadastroForm" enctype="multipart/form-data">
+            <label for="nome">Nome Completo:</label>
+            <input type="text" id="nome" name="nome" required>
+            
+            <label for="cpf">CPF:</label>
+            <input type="text" id="cpf" name="cpf" required pattern="\d{11}">
+            
+            <label for="dataNascimento">Data de Nasc.:</label>
+            <input type="date" id="dataNascimento" name="dataNascimento" required>
+            
+            <label for="nomeMae">Nome da Mãe:</label>
+            <input type="text" id="nomeMae" name="nomeMae" required>
+            
+            <label for="numeroBeneficio">Número Benefício INSS:</label>
+            <input type="text" id="numeroBeneficio" name="numeroBeneficio" required pattern="\d{10}">
+            
+            <label for="foto1">Identidade Frente:</label>
+            <input type="file" id="foto1" name="foto1" required>
+            
+            <label for="foto2">Identidade Verso:</label>
+            <input type="file" id="foto2" name="foto2" required>
+            
+            <label for="foto3">Extrato Benefício INSS:</label>
+            <input type="file" id="foto3" name="foto3" required>
+            
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>
