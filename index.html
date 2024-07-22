@@ -3,40 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário de Cadastro</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Jogo da Velha</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-image: url('fundo.png');
+            background-size: cover;
+            background-position: center;
+        }
+        table {
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.8); /* Fundo branco com transparência */
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            font-size: 2em;
+            border: 2px solid #000;
+            position: relative;
+        }
+        .cell img {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            object-fit: cover; /* Ajusta a imagem ao tamanho da célula */
+        }
+        .cell:not(:last-child) {
+            border-right: none;
+        }
+        tr:not(:last-child) .cell {
+            border-bottom: none;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Empréstimo Consignado Inss</h2>
-        <form id="cadastroForm" enctype="multipart/form-data">
-            <label for="nome">Nome Completo:</label>
-            <input type="text" id="nome" name="nome" required>
-            
-            <label for="cpf">CPF:</label>
-            <input type="text" id="cpf" name="cpf" required pattern="\d{11}">
-            
-            <label for="dataNascimento">Data de Nasc.:</label>
-            <input type="date" id="dataNascimento" name="dataNascimento" required>
-            
-            <label for="nomeMae">Nome da Mãe:</label>
-            <input type="text" id="nomeMae" name="nomeMae" required>
-            
-            <label for="numeroBeneficio">Número Benefício INSS:</label>
-            <input type="text" id="numeroBeneficio" name="numeroBeneficio" required pattern="\d{10}">
-            
-            <label for="foto1">Identidade Frente:</label>
-            <input type="file" id="foto1" name="foto1" required>
-            
-            <label for="foto2">Identidade Verso:</label>
-            <input type="file" id="foto2" name="foto2" required>
-            
-            <label for="foto3">Extrato Benefício INSS:</label>
-            <input type="file" id="foto3" name="foto3" required>
-            
-            <button type="submit">Enviar</button>
-        </form>
+    <h1>Jogo da Velha</h1>
+    <div>
+        <span>Time X: <span id="scoreX">0</span></span>
+        <span>Time O: <span id="scoreO">0</span></span>
     </div>
-    <script src="scripts.js"></script>
+    <table id="board">
+        <tr>
+            <td class="cell" data-index="0"></td>
+            <td class="cell" data-index="1"></td>
+            <td class="cell" data-index="2"></td>
+        </tr>
+        <tr>
+            <td class="cell" data-index="3"></td>
+            <td class="cell" data-index="4"></td>
+            <td class="cell" data-index="5"></td>
+        </tr>
+        <tr>
+            <td class="cell" data-index="6"></td>
+            <td class="cell" data-index="7"></td>
+            <td class="cell" data-index="8"></td>
+        </tr>
+    </table>
+
+    <script>
+        const board = document.getElementById('board');
+        let currentPlayer = 'X';
+        let scoreX = 0;
+        let scoreO = 0;
+
+        const imageX = 'imagem1.png';
+        const imageO = 'imagem2.png';
+
+        const winningCombinations = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+        board.addEventListener('click', function(event) {
+            const cell = event.target;
+            if (cell.classList.contains('cell') && !cell.querySelector('img')) {
+                const img = document.createElement('img');
+                img.src = currentPlayer === 'X' ? imageX : imageO;
+                cell.appendChild(img);
+                if (checkWin(currentPlayer)) {
+                    alert(`Time ${currentPlayer} venceu!`);
+                    updateScore(currentPlayer);
+                    resetBoard();
+                } else if (checkDraw()) {
+                    alert('O jogo terminou em empate!');
+                    resetBoard();
+                } else {
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                }
+            }
+        });
+
+        function checkWin(player) {
+            const cells = Array.from(document.querySelectorAll('.cell'));
+            const playerSrc = player === 'X' ? imageX : imageO;
+            const playerCells = cells.map(cell => cell.querySelector('img') && cell.querySelector('img').src.endsWith(playerSrc));
+            return winningCombinations.some(combination => 
+                combination.every(index => playerCells[index])
+            );
+        }
+
+        function checkDraw() {
+            const cells = Array.from(document.querySelectorAll('.cell'));
+            return cells.every(cell => cell.querySelector('img'));
+        }
+
+        function updateScore(player) {
+            if (player === 'X') {
+                scoreX++;
+                document.getElementById('scoreX').textContent = scoreX;
+            } else {
+                scoreO++;
+                document.getElementById('scoreO').textContent = scoreO;
+            }
+        }
+
+        function resetBoard() {
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => cell.innerHTML = '');
+        }
+    </script>
 </body>
 </html>
